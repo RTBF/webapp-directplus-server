@@ -1,0 +1,11 @@
+{
+  "name": "DirectPlusNodeServer",
+  "version": "0.0.2",
+  "engine": {
+    "node": "0.8.x"
+  },
+  "dependencies": {
+    "requirejs": "2.1.4",
+    "socket.io": "0.9.13"
+  }
+}
