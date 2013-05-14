@@ -10,20 +10,29 @@ confDB = mongoose.connection
 
 confDB.on 'error', console.error.bind(console, 'connection error:')
 
-console.log "trying to open database"
+operationsRunning = 0
+
+operationDone= () ->
+  operationsRunning--
+  if operationsRunning <= 0
+    confDB.close()
+    console.log "setup finished"
+
 
 confDB.once 'open', ()->
-  console.log "open database"
-
   Seba = new Admin
     firstname: 'Sebastien' 
     lastname: 'Barbieri'
     email: 'seba@rtbf.be'
 
-  Seba.save (err, fabriceData)->
-    if err
-      console.log "saving error man"
-      console.log err
-    else
-      console.log 'Seba as admin added'
-    confDB.close()
+  operationsRunning++
+  try
+    Seba.save (err, fabriceData)->
+      if err
+        console.log "error occured"
+        if err.code == 11000
+          console.log "admin already added"
+      else
+        console.log 'Seba as admin added'
+      operationDone()
+  catch Exception
