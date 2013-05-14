@@ -91,10 +91,10 @@ module.exports.CreateOrganisation = CreateOrganisation = (newOrg, callback)=>
   console.log "newOrg: ", newOrg
   Admin
   .findOne
-    _id : newOrg._admin
+    email : 'seba@rtbf.be'
     (err, admin)=>
       organisation= new Organisation
-        _admin: newOrg._admin
+        _admin: admin._id
         name : newOrg.title
         tumb : newOrg.tumb
         description : newOrg.description

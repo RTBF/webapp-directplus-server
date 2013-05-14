@@ -104,11 +104,11 @@ module.exports.CreateConference = CreateConference = function(newconf, callback)
 module.exports.CreateOrganisation = CreateOrganisation = function(newOrg, callback) {
   console.log("newOrg: ", newOrg);
   return Admin.findOne({
-    _id: newOrg._admin
+    email: 'seba@rtbf.be'
   }, function(err, admin) {
     var organisation;
     organisation = new Organisation({
-      _admin: newOrg._admin,
+      _admin: admin._id,
       name: newOrg.title,
       tumb: newOrg.tumb,
       description: newOrg.description
