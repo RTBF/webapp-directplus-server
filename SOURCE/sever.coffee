@@ -38,9 +38,9 @@ io.sockets.on 'connection' , (socket) =>
     console.log 'user connected'
 
   ### CONNECTION DE L'ADMIN###
-  socket.on 'admin', (id)=>
-    console.log "received connection from admin: ", id
-    DBCom.getOrgaListfromAdmin id, (dbdata)=>
+  socket.on 'admin', (email)=>
+    console.log "received connection from admin: ", email
+    DBCom.getOrgaListfromAdmin email, (dbdata)=>
       console.log dbdata
       socket.emit 'organisations' , dbdata 
 

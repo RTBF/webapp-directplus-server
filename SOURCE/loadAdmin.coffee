@@ -5,7 +5,7 @@ Slide = require './Models/Slide.js'
 Organisation = require "./Models/Organisation.js"
 Conference =  require "./Models/Conference.js"
 
-dsn = "mongodb://localhost/WebConference"
+dsn = "mongodb://localhost/DirectPlus"
 
 mongoose.connect dsn
 

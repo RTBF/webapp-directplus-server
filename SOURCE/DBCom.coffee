@@ -5,7 +5,7 @@ Slide = require './Models/Slide.js'
 Organisation = require "./Models/Organisation.js"
 Conference =  require "./Models/Conference.js"
 
-dsn = "mongodb://localhost/WebConference"
+dsn = "mongodb://localhost/DirectPlus"
 
 mongoose.connect dsn
 
@@ -14,12 +14,13 @@ confDB = mongoose.connection
 confDB.on 'error', console.error.bind(console, 'connection error:')
 
 
-module.exports.getOrgaListfromAdmin = getOrgaList = (AdminId , callback)=>
+module.exports.getOrgaListfromAdmin = getOrgaList = (AdminEmail , callback)=>
   organisation = null
   Admin
   .findOne 
-    _id:AdminId
+    email:AdminEmail
     (err, admin)=>
+      console.log admin
       if err
         console.log err
         return

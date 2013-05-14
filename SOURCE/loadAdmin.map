@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "loadAdmin.js",
+  "sourceRoot": "../../../../../../home/scips",
+  "sources": [
+    "../../var/www/github/RTBF/webapp-directplus-server/SOURCE/loadAdmin.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA,IAAA,iEAAA;;AAAA,CAAA,EAAW,IAAA,CAAX,EAAW;;AACX,CADA,EACS,GAAT,EAAiB;;AACjB,CAFA,EAEQ,EAAR,EAAQ,YAAA;;AACR,CAHA,EAGQ,EAAR,EAAQ,YAAA;;AACR,CAJA,EAIe,IAAA,KAAf,cAAe;;AACf,CALA,EAKc,IAAA,GAAd,cAAc;;AAEd,CAPA,EAOA,6BAPA;;AASA,CATA,EASA,IAAA,CAAQ;;AAER,CAXA,EAWS,GAAT,EAAiB,EAXjB;;AAaA,CAbA,CAaA,EAAmB,CAAa,CAA1B,CAAN,YAAmB;;AAEnB,CAfA,CAeoB,CAAA,CAApB,EAAM,GAAc;CACZ,CAAW,CAAN,CAAX,CAAK,CAAM,GAAX;CACE,OAAA,YAAA;;CAAA,EAAA,CAAA;CACE,EAAA,GAAA,CAAO,UAAP;MADF;CAEA,EAAmB,CAAnB,EAAS;CACP,EAAA,GAAA;AACA,CAAA;GAAA,SAAS,4DAAT;CACE,EAAA,IAAO,CAAP;CAAA,CACuB,CAAvB,GAA8B,CAAvB,EAAP;CAFF;uBAFF;MAHS;CAAX,EAAW;CAUX;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;CAVA;CAyCA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;CA1CkB;CAAA"
+}
