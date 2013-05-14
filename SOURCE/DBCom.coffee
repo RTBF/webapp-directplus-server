@@ -13,10 +13,10 @@ mongoose.connect dsn
 
 confDB = mongoose.connection
 
-confDB.on 'error', console.error.bind(console, 'connection error:')
+confDB.on 'error', console.error.bind(console, 'connection error com:')
 
 
-module.exports.getOrgaListfromAdmin = getOrgaList = (AdminEmail , callback)=>
+module.exports.getOrgaListfromAdmin = getOrgaListfromAdmin = (AdminEmail , callback)=>
   organisation = null
   Admin
   .findOne 
@@ -70,7 +70,7 @@ module.exports.readSlideList = readSlideList = (ConfId, callback)->
   .populate('slides')
   .exec (err, conference)=>
     len = conference.slides.length - 1
-    for x in [0..len]
+    for x in slides
       if conference.slides[x].Sent
         slides.push conference.slides[x]
     callback slides

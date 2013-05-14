@@ -14,6 +14,18 @@ confDB = mongoose.connection
 confDB.on 'error', console.error.bind(console, 'connection error:')
 
 confDB.once 'open', ()->
+  Seba = new Admin
+    firstname: 'Sebastien' 
+    lastname: 'Barbeiri'
+    email: 'seba@rtbf.be'
+
+  Seba.save (err, fabriceData)->
+    if err
+      console.log "saving error man"
+      console.log err
+    else
+      console.log 'Seba as admin added: ', fabriceData 
+
   Admin.find (err, admins) ->
     if (err)
       console.log "find erreur man"

@@ -4,10 +4,11 @@ Admin = require './Models/Admin.js'
 Slide = require './Models/Slide.js'
 Organisation = require "./Models/Organisation.js"
 Conference =  require "./Models/Conference.js"
-dsn = "mongodb://localhost/WebConference"
-mongoose.connect dsn
+Config = require "./config"
+dsn = Config.dsn
+mongoose.createConnection dsn
 confDB = mongoose.connection
-confDB.on 'error', console.error.bind(console, 'connection error:')
+confDB.on 'error', console.error.bind(console, 'connection error create:')
 
 module.exports.CreateSlide = CreateSlide = (newslide , callback)=>
   conf=newslide._conf
@@ -40,15 +41,19 @@ module.exports.UpdateSlide = UpdateSlide = (newslide , callback)=>
   id=newslide._id
   jsonData= newslide.jsonData
 
-  Slide.findByIdAndUpdate id , JsonData: jsonData , new: true , (err, slide)=>
-    callback(slide)
+  Slide.findByIdAndUpdate id , 
+    JsonData:jsonData 
+  , 
+    new: true 
+  , 
+    (err, slide)=>
+      callback(slide)
       
 module.exports.DeleteSlide = DeleteSlide = (slideId , callback)=>
   Slide.findByIdAndRemove slideId, (err, slide)=>
     if err
       console.log err
-    console.log 'voici le slide', slide
-    callback slide._id
+    callback slide
 
 module.exports.CreateConference = CreateConference = (newconf, callback)=>
   try
@@ -88,11 +93,12 @@ module.exports.CreateConference = CreateConference = (newconf, callback)=>
 
 
 module.exports.CreateOrganisation = CreateOrganisation = (newOrg, callback)=>
-  console.log "newOrg: ", newOrg
   Admin
   .findOne
     email : 'seba@rtbf.be'
     (err, admin)=>
+      console.log "admin: ", admin
+      console.log "new org: ", newOrg
       organisation= new Organisation
         _admin: admin._id
         name : newOrg.title
@@ -103,7 +109,6 @@ module.exports.CreateOrganisation = CreateOrganisation = (newOrg, callback)=>
         if err
           console.log "erreur", err
         callback organisation
-        console.log admin
         admin.organisations.push organisation
         admin.save (err, admin)->
           #
@@ -125,24 +130,42 @@ module.exports.DeleteConference = DeleteConference= (confId, callback)=>
     callback conference._id
 
 module.exports.DeleteOrganisation = DeleteOrganisation= (orgId, callback)=>
+
   Conference.find
     _orga:orgId
     (err, conferences)=>
       for x in conferences
-        conferences[x].remove (err)->
+        @DeleteConference conferences[x]._id
           # ...
 
   Organisation.findByIdAndRemove orgId, (err, organisation)=>
     if err
       console.log err
-    console.log 'voici le slide', slide
     callback organisation._id
 
-module.exports.UpdateConference = UpdateConference= (conference, callback)=>
-  Slide.findByIdAndUpdate conference._id  , new: true , (err, slide)=>
-    callback(slide)
+module.exports.UpdateConference = UpdateConference= (nconference, callback)=>
+  
+  Conference.findByIdAndUpdate nconference._id,
+    name: nconference.name
+    date: nconference.date
+    tumb: nconference.tumb
+    description: nconference.description
+  ,
+    new: true
+  , 
+    (err, conference) ->
+      callback conference
 
-module.exports.UpdateOrganisation = UpdateOrganisation= (organisation, callback)=>
-  Slide.findByIdAndUpdate organisation._id , new: true , (err, slide)=>
-    callback(slide)
+
+module.exports.UpdateOrganisation = UpdateOrganisation= (norganisation, callback)=>
+  Organisation.findByIdAndUpdate norganisation._id , 
+    name: norganisation.title
+    tumb: norganisation.tumb
+    description:norganisation.description
+  ,
+    new: true 
+  , 
+    (err, organisation)=>
+      console.log "organisation updated: ", organisation
+      callback(organisation)
 

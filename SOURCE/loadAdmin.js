@@ -22,6 +22,20 @@ confDB = mongoose.connection;
 confDB.on('error', console.error.bind(console, 'connection error:'));
 
 confDB.once('open', function() {
+  var Seba;
+  Seba = new Admin({
+    firstname: 'Sebastien',
+    lastname: 'Barbeiri',
+    email: 'seba@rtbf.be'
+  });
+  Seba.save(function(err, fabriceData) {
+    if (err) {
+      console.log("saving error man");
+      return console.log(err);
+    } else {
+      return console.log('Seba as admin added: ', fabriceData);
+    }
+  });
   return Admin.find(function(err, admins) {
     var len, x, _i, _results;
 

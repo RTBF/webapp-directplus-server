@@ -98,11 +98,12 @@ io.sockets.on 'connection' , (socket) =>
     console.log 'reçu un slide à detruire'
     DBCreate.DeleteSlide data, (dbdata)=>
       console.log dbdata
-      socket.emit 'slideDeleted', (dbdata)
+      socket.emit 'slideDeleted', (dbdata._id)
       if dbdata.Sent is true
         brodcastSlide 'sremove', dbdata 
 
   socket.on 'newOrganisation', (data)=>
+    console.log data
     DBCreate.CreateOrganisation data, (dbdata)=>
       socket.emit 'orgCreated', dbdata
 
@@ -111,21 +112,22 @@ io.sockets.on 'connection' , (socket) =>
       console.log dbdata
       socket.emit 'confCreated', dbdata
 
-  socket.on 'deleteConference', (data)=>
+  socket.on 'deleteconf', (data)=>
     DBCreate.DeleteConference data , (dbdata)=>
-      socket.emit 'confDeleted', dbdata 
+      socket.emit 'confdeleted', dbdata 
   
-  socket.on 'deleteOrganisation', (data)=>
+  socket.on 'deleteorg', (data)=>
     DBCreate.DeleteOrganisation data, (dbdata)=>
-      socket.emit 'orgDeleted', dbdata
+      socket.emit 'orgdeleted', dbdata
 
-  socket.on 'updateOrganisation', (data)=>
+  socket.on 'updateorg', (data)=>
     DBCreate.UpdateOrganisation data, (dbdata)=>
-      socket.emit 'orgUpdated', dbdata
+      console.log 'org update: ', dbdata
+      socket.emit 'orgupdated', dbdata
 
-  socket.on 'updateConference', (data)=>
+  socket.on 'updateconf', (data)=>
     DBCreate.UpdateConference data , (dbdata)=>
-      socket.emit 'confUpdated', dbdata 
+      socket.emit 'confu pdated', dbdata 
 
 
 

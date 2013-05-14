@@ -131,13 +131,14 @@ io.sockets.on('connection', function(socket) {
     console.log('reçu un slide à detruire');
     return DBCreate.DeleteSlide(data, function(dbdata) {
       console.log(dbdata);
-      socket.emit('slideDeleted', dbdata);
+      socket.emit('slideDeleted', dbdata._id);
       if (dbdata.Sent === true) {
         return brodcastSlide('sremove', dbdata);
       }
     });
   });
   socket.on('newOrganisation', function(data) {
+    console.log(data);
     return DBCreate.CreateOrganisation(data, function(dbdata) {
       return socket.emit('orgCreated', dbdata);
     });
@@ -148,24 +149,25 @@ io.sockets.on('connection', function(socket) {
       return socket.emit('confCreated', dbdata);
     });
   });
-  socket.on('deleteConference', function(data) {
+  socket.on('deleteconf', function(data) {
     return DBCreate.DeleteConference(data, function(dbdata) {
-      return socket.emit('confDeleted', dbdata);
+      return socket.emit('confdeleted', dbdata);
     });
   });
-  socket.on('deleteOrganisation', function(data) {
+  socket.on('deleteorg', function(data) {
     return DBCreate.DeleteOrganisation(data, function(dbdata) {
-      return socket.emit('orgDeleted', dbdata);
+      return socket.emit('orgdeleted', dbdata);
     });
   });
-  socket.on('updateOrganisation', function(data) {
+  socket.on('updateorg', function(data) {
     return DBCreate.UpdateOrganisation(data, function(dbdata) {
-      return socket.emit('orgUpdated', dbdata);
+      console.log('org update: ', dbdata);
+      return socket.emit('orgupdated', dbdata);
     });
   });
-  socket.on('updateConference', function(data) {
+  socket.on('updateconf', function(data) {
     return DBCreate.UpdateConference(data, function(dbdata) {
-      return socket.emit('confUpdated', dbdata);
+      return socket.emit('confu pdated', dbdata);
     });
   });
   return brodcastSlide = function(message, dbdata) {
