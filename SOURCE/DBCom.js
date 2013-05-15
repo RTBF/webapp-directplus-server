@@ -81,13 +81,13 @@ module.exports.readSlideList = readSlideList = function(ConfId, callback) {
     if (err) {
       return console.log("error while trying to find the organisations of this admin");
     }
-  }).populate('slides').exec(function(err, conference) {
-    var len, x, _i, _len;
-    len = conference.slides.length - 1;
-    for (_i = 0, _len = slides.length; _i < _len; _i++) {
-      x = slides[_i];
-      if (conference.slides[x].Sent) {
-        slides.push(conference.slides[x]);
+  }).populate('slides').exec(function(err, conferences) {
+    var slide, _i, _len, _ref;
+    _ref = conferences.slides;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      slide = _ref[_i];
+      if (slide.Sent) {
+        slides.push(slide);
       }
     }
     return callback(slides);

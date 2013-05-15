@@ -77,12 +77,13 @@ module.exports.CreateConference = CreateConference = function(newconf, callback)
     return Organisation.findOne({
       _id: newconf._orga
     }, function(err, organisation) {
-      var conference;
+      var conference, mydate;
       try {
+        mydate = new Date(newconf.date);
         conference = new Conference({
           _orga: newconf._orga,
           name: newconf.name,
-          date: newconf.date,
+          date: mydate,
           tumb: newconf.tumb,
           description: newconf.description
         });

@@ -68,11 +68,11 @@ module.exports.readSlideList = readSlideList = (ConfId, callback)->
       if err
         console.log "error while trying to find the organisations of this admin"
   .populate('slides')
-  .exec (err, conference)=>
-    len = conference.slides.length - 1
-    for x in slides
-      if conference.slides[x].Sent
-        slides.push conference.slides[x]
+  .exec (err, conferences)=>
+    #len = conferences.slides.length - 1
+    for slide in conferences.slides
+      if slide.Sent
+        slides.push slide
     callback slides
 
 module.exports.readSlideListForSlider = readSlideListForSlider = (ConfId, callback)->

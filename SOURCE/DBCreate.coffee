@@ -64,11 +64,13 @@ module.exports.CreateConference = CreateConference = (newconf, callback)=>
     .findOne
       _id : newconf._orga
       (err, organisation)=>
+
         try
+          mydate = new Date newconf.date
           conference= new Conference
             _orga: newconf._orga
             name : newconf.name
-            date : newconf.date
+            date : mydate
             tumb : newconf.tumb
             description : newconf.description
         
