@@ -47,8 +47,12 @@ io.sockets.on 'connection' , (socket) =>
 
   ### CHOIX DE L'ORGANISATION PAR LE USER ###
   socket.on 'organisationChoosed', (id)=>
-    DBCom.readConference id, (dbdata)=>
+    DBCom.readConference id, 1, (dbdata)=>
       socket.emit 'conferences', dbdata
+
+  socket.on 'nextPageOfOrg', (data)=>
+    DBCom.readConference data.id, data.page, (dbdata)=>
+      socket.emit 'nextConferences', dbdata
 
 
   ### CHOIX DE LA CONFERENCE PAR LE USER ###
@@ -65,8 +69,8 @@ io.sockets.on 'connection' , (socket) =>
         console.log "hash:",hash
     socket.join id
     DBCom.readSlideList id, (dbdata)=>
-
       socket.emit 'slides', dbdata
+
 
 
   ### ENVOIE D'UN SLIDE PAR L'ADMIN ###

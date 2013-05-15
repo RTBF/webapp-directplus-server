@@ -68,8 +68,13 @@ io.sockets.on('connection', function(socket) {
   */
 
   socket.on('organisationChoosed', function(id) {
-    return DBCom.readConference(id, function(dbdata) {
+    return DBCom.readConference(id, 1, function(dbdata) {
       return socket.emit('conferences', dbdata);
+    });
+  });
+  socket.on('nextPageOfOrg', function(data) {
+    return DBCom.readConference(data.id, data.page, function(dbdata) {
+      return socket.emit('nextConferences', dbdata);
     });
   });
   /* CHOIX DE LA CONFERENCE PAR LE USER

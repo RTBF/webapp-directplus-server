@@ -45,8 +45,11 @@ module.exports.getOrgaList = getOrgaList = (callback)=>
 
 
 
-module.exports.readConference = readConference = (OrgId, callback)->
-  Confs = null
+module.exports.readConference = readConference = (OrgId, page, callback)->
+  Confs = []
+  finish= page*5
+  start = finish - 5
+  finish--
   Organisation
   .findOne 
     _id:OrgId
@@ -55,10 +58,45 @@ module.exports.readConference = readConference = (OrgId, callback)->
         console.log "error while trying to find the organisations of this admin"
   .populate('conferences')
   .exec (err, organisation)=>
-    Confs = organisation.conferences
-    callback Confs
+    if organisation.conferences.length >0
+      len = organisation.conferences.length - 1
+      orderArray organisation.conferences, len, (orderedConfs)=>
+        for i in [start..finish]
+          console.log "i", i
+          Confs.push orderedConfs[i] if orderedConfs[i]
+        callback Confs
+    else
+      callback Confs
 
+module.exports.readAllConferences= readAllConferences = (page, callback)->
+  Confs = []
+  finish= page*5
+  start = finish - 5
+  finish--
+  Conference.find (err, confs)=>
+    if err
+      console.log "erreur: ", err
+    if confs.length >0
+      len  = confs.length - 1
+      orderArray confs, len, (ordered)=>
+        for i in [start..finish]
+          console.log i
+          Confs.push orderedConfs[i] if orderedConfs[i]
+        callback Confs
+    else
+      callback Confs
 
+orderArray = (array, len, callback)->
+
+  for i in [1..len]
+    elt= array[i]
+    j= i
+    while j>0 and array[j-1].date.getTime() > elt.date.getTime()
+      array[j]=array[j-1]
+      j--
+    array[j]=elt
+  callback array
+    
 module.exports.readSlideList = readSlideList = (ConfId, callback)->
   slides = []
   Conference
