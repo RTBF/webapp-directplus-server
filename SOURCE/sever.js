@@ -68,6 +68,7 @@ io.sockets.on('connection', function(socket) {
   */
 
   socket.on('organisationChoosed', function(id) {
+    console.log("org choosed");
     return DBCom.readConference(id, 1, function(dbdata) {
       return socket.emit('conferences', dbdata);
     });

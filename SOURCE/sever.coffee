@@ -47,6 +47,7 @@ io.sockets.on 'connection' , (socket) =>
 
   ### CHOIX DE L'ORGANISATION PAR LE USER ###
   socket.on 'organisationChoosed', (id)=>
+    console.log "org choosed"
     DBCom.readConference id, 1, (dbdata)=>
       socket.emit 'conferences', dbdata
 
