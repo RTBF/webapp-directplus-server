@@ -60,6 +60,7 @@ module.exports.readConference = readConference = (OrgId, page, callback)->
         console.log "error while trying to find the organisations of this admin"
   .populate('conferences')
   .exec (err, organisation)=>
+    console.log organisation
     if organisation.conferences.length >0
       len = organisation.conferences.length - 1
       orderArray organisation.conferences, len, (orderedConfs)=>
@@ -124,7 +125,7 @@ module.exports.readAllConferences= readAllConferences = (page, callback)->
       console.log "erreur: ", err
     if confs.length >0
       len  = confs.length - 1
-      orderArray confs, len, (ordered)=>
+      orderArray confs, len, (orderedConfs)=>
         x=0
         nonok= true
         while x<orderedConfs.length and nonok
@@ -146,14 +147,15 @@ module.exports.readAllConferences= readAllConferences = (page, callback)->
       callback Confs
 
 orderArray = (array, len, callback)->
-
-  for i in [1..len]
-    elt= array[i]
-    j= i
-    while j>0 and array[j-1].date.getTime() > elt.date.getTime()
-      array[j]=array[j-1]
-      j--
-    array[j]=elt
+  console.log "array: ", array
+  if i>0
+    for i in [1..len]
+      elt= array[i]
+      j= i
+      while j>0 and array[j-1].date.getTime() > elt.date.getTime()
+        array[j]=array[j-1]
+        j--
+      array[j]=elt
   callback array
     
 module.exports.readSlideList = readSlideList = (ConfId, callback)->

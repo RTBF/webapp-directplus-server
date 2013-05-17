@@ -78,27 +78,27 @@ module.exports.CreateConference = CreateConference = function(newconf, callback)
       _id: newconf._orga
     }, function(err, organisation) {
       var conference, mydate;
-      try {
-        mydate = new Date(newconf.date);
-        conference = new Conference({
-          _orga: newconf._orga,
-          name: newconf.name,
-          date: mydate,
-          tumb: newconf.tumb,
-          description: newconf.description
+      mydate = new Date(newconf.date);
+      conference = new Conference({
+        _orga: newconf._orga,
+        name: newconf.name,
+        date: mydate,
+        tumb: newconf.tumb,
+        description: newconf.description
+      });
+      return conference.save(function(err, conference) {
+        if (err) {
+          console.log("save erreur", err);
+        }
+        callback(conference);
+        organisation.conferences.push(conference);
+        return organisation.save(function(err, organisation) {
+          return console.log('organisation: ', organisation);
         });
-        return conference.save(function(err, conference) {
-          if (err) {
-            console.log("save erreur", err);
-          }
-          callback(conference);
-          organisation.conferences.push(conference);
-          return organisation.save(function(err, organisation) {});
-        });
-      } catch (e) {
-        return console.log(err);
-      }
-    }).populate('conferences').exec(function(err, organisations) {});
+      });
+    }).populate('conferences').exec(function(err, organisations) {
+      return console.log("organisations", organisations);
+    });
   } catch (e) {
 
   }
@@ -109,8 +109,6 @@ module.exports.CreateOrganisation = CreateOrganisation = function(newOrg, callba
     email: 'seba@rtbf.be'
   }, function(err, admin) {
     var organisation;
-    console.log("admin: ", admin);
-    console.log("new org: ", newOrg);
     organisation = new Organisation({
       _admin: admin._id,
       name: newOrg.title,
@@ -136,7 +134,7 @@ module.exports.DeleteConference = DeleteConference = function(confId, callback) 
     _results = [];
     for (_i = 0, _len = slides.length; _i < _len; _i++) {
       x = slides[_i];
-      _results.push(slides[x].remove(function(err) {}));
+      _results.push(x.remove(function(err) {}));
     }
     return _results;
   });
@@ -156,7 +154,9 @@ module.exports.DeleteOrganisation = DeleteOrganisation = function(orgId, callbac
     _results = [];
     for (_i = 0, _len = conferences.length; _i < _len; _i++) {
       x = conferences[_i];
-      _results.push(_this.DeleteConference(conferences[x]._id));
+      _results.push(_this.DeleteConference(x, function(id) {
+        return console.log(id);
+      }));
     }
     return _results;
   });

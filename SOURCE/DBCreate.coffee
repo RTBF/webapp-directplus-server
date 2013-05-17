@@ -58,37 +58,29 @@ module.exports.DeleteSlide = DeleteSlide = (slideId , callback)=>
 module.exports.CreateConference = CreateConference = (newconf, callback)=>
   try
     # ...
-
     
     Organisation
     .findOne
       _id : newconf._orga
       (err, organisation)=>
-
-        try
-          mydate = new Date newconf.date
-          conference= new Conference
-            _orga: newconf._orga
-            name : newconf.name
-            date : mydate
-            tumb : newconf.tumb
-            description : newconf.description
-        
-          conference.save (err, conference) ->
-            if err
-              console.log "save erreur", err
-            callback conference
-            organisation.conferences.push conference
-            organisation.save (err, organisation)->
-              #
-          # ...
-        catch e
-          console.log err
-          # ...
-        
-        
+        mydate = new Date newconf.date
+        conference= new Conference
+          _orga: newconf._orga
+          name : newconf.name
+          date : mydate
+          tumb : newconf.tumb
+          description : newconf.description
+      
+        conference.save (err, conference) ->
+          if err
+            console.log "save erreur", err
+          callback conference
+          organisation.conferences.push conference
+          organisation.save (err, organisation)->
+            console.log 'organisation: ', organisation
     .populate('conferences')
     .exec (err, organisations)=>
+      console.log "organisations", organisations
       #
   catch e
     # ...
@@ -99,8 +91,6 @@ module.exports.CreateOrganisation = CreateOrganisation = (newOrg, callback)=>
   .findOne
     email : 'seba@rtbf.be'
     (err, admin)=>
-      console.log "admin: ", admin
-      console.log "new org: ", newOrg
       organisation= new Organisation
         _admin: admin._id
         name : newOrg.title
@@ -123,7 +113,7 @@ module.exports.DeleteConference = DeleteConference= (confId, callback)=>
     _conf:confId
     (err, slides)=>
       for x in slides
-        slides[x].remove (err)->
+        x.remove (err)->
           #...
 
   Conference.findByIdAndRemove confId, (err, conference)=>
@@ -137,8 +127,9 @@ module.exports.DeleteOrganisation = DeleteOrganisation= (orgId, callback)=>
     _orga:orgId
     (err, conferences)=>
       for x in conferences
-        @DeleteConference conferences[x]._id
-          # ...
+        @DeleteConference x, (id)->
+          console.log id
+      
 
   Organisation.findByIdAndRemove orgId, (err, organisation)=>
     if err

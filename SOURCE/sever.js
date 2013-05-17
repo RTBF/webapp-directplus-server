@@ -163,7 +163,6 @@ io.sockets.on('connection', function(socket) {
   });
   socket.on('newConference', function(data) {
     return DBCreate.CreateConference(data, function(dbdata) {
-      console.log(dbdata);
       return socket.emit('confCreated', dbdata);
     });
   });

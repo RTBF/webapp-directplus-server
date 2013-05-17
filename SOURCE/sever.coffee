@@ -124,7 +124,6 @@ io.sockets.on 'connection' , (socket) =>
 
   socket.on 'newConference', (data)=>
     DBCreate.CreateConference data, (dbdata)=>
-      console.log dbdata
       socket.emit 'confCreated', dbdata
 
   socket.on 'deleteconf', (data)=>

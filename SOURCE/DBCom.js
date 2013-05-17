@@ -72,6 +72,7 @@ module.exports.readConference = readConference = function(OrgId, page, callback)
     }
   }).populate('conferences').exec(function(err, organisation) {
     var len;
+    console.log(organisation);
     if (organisation.conferences.length > 0) {
       len = organisation.conferences.length - 1;
       return orderArray(organisation.conferences, len, function(orderedConfs) {
@@ -155,7 +156,7 @@ module.exports.readAllConferences = readAllConferences = function(page, callback
     }
     if (confs.length > 0) {
       len = confs.length - 1;
-      return orderArray(confs, len, function(ordered) {
+      return orderArray(confs, len, function(orderedConfs) {
         var i, nonok, x, _i;
         x = 0;
         nonok = true;
@@ -186,14 +187,17 @@ module.exports.readAllConferences = readAllConferences = function(page, callback
 
 orderArray = function(array, len, callback) {
   var elt, i, j, _i;
-  for (i = _i = 1; 1 <= len ? _i <= len : _i >= len; i = 1 <= len ? ++_i : --_i) {
-    elt = array[i];
-    j = i;
-    while (j > 0 && array[j - 1].date.getTime() > elt.date.getTime()) {
-      array[j] = array[j - 1];
-      j--;
+  console.log("array: ", array);
+  if (i > 0) {
+    for (i = _i = 1; 1 <= len ? _i <= len : _i >= len; i = 1 <= len ? ++_i : --_i) {
+      elt = array[i];
+      j = i;
+      while (j > 0 && array[j - 1].date.getTime() > elt.date.getTime()) {
+        array[j] = array[j - 1];
+        j--;
+      }
+      array[j] = elt;
     }
-    array[j] = elt;
   }
   return callback(array);
 };
