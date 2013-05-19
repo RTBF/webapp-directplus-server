@@ -37,6 +37,15 @@ io.sockets.on 'connection' , (socket) =>
       socket.emit 'organisations', dbdata
     console.log 'user connected'
 
+  socket.on 'allConfs',(data)=>
+    DBCom.readAllConferences 1, (dbdata)=>
+      for i in dbdata
+        console.log i.name
+        # ...
+      
+      socket.emit 'allconferences', dbdata
+
+
   ### CONNECTION DE L'ADMIN###
   socket.on 'admin', (email)=>
     console.log "received connection from admin: ", email

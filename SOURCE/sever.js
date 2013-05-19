@@ -54,6 +54,16 @@ io.sockets.on('connection', function(socket) {
     });
     return console.log('user connected');
   });
+  socket.on('allConfs', function(data) {
+    return DBCom.readAllConferences(1, function(dbdata) {
+      var i, _i, _len;
+      for (_i = 0, _len = dbdata.length; _i < _len; _i++) {
+        i = dbdata[_i];
+        console.log(i.name);
+      }
+      return socket.emit('allconferences', dbdata);
+    });
+  });
   /* CONNECTION DE L'ADMIN
   */
 

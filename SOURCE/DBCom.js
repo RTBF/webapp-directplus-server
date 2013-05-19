@@ -149,6 +149,7 @@ module.exports.readAllConferences = readAllConferences = function(page, callback
   start = finish - 5;
   finish--;
   now = new Date();
+  console.log("whatup?");
   return Conference.find(function(err, confs) {
     var len;
     if (err) {
@@ -157,22 +158,24 @@ module.exports.readAllConferences = readAllConferences = function(page, callback
     if (confs.length > 0) {
       len = confs.length - 1;
       return orderArray(confs, len, function(orderedConfs) {
-        var i, nonok, x, _i;
+        var i, nonok, x, _i, _j, _len;
+        for (_i = 0, _len = orderedConfs.length; _i < _len; _i++) {
+          i = orderedConfs[_i];
+          console.log(i.name);
+          console.log(i.date);
+        }
         x = 0;
         nonok = true;
         while (x < orderedConfs.length && nonok) {
-          console.log(x);
           if (orderedConfs[x].date.getTime() < now.getTime()) {
             x++;
           } else {
             nonok = false;
           }
         }
-        console.log(orderedConfs);
         start = start + x;
         finish = finish + x;
-        for (i = _i = start; start <= finish ? _i <= finish : _i >= finish; i = start <= finish ? ++_i : --_i) {
-          console.log(i);
+        for (i = _j = start; start <= finish ? _j <= finish : _j >= finish; i = start <= finish ? ++_j : --_j) {
           if (orderedConfs[i]) {
             Confs.push(orderedConfs[i]);
           }
@@ -186,17 +189,18 @@ module.exports.readAllConferences = readAllConferences = function(page, callback
 };
 
 orderArray = function(array, len, callback) {
-  var elt, i, j, _i;
-  console.log("array: ", array);
-  if (i > 0) {
-    for (i = _i = 1; 1 <= len ? _i <= len : _i >= len; i = 1 <= len ? ++_i : --_i) {
-      elt = array[i];
-      j = i;
-      while (j > 0 && array[j - 1].date.getTime() > elt.date.getTime()) {
-        array[j] = array[j - 1];
-        j--;
+  var elt, i, j, _i, _j;
+  for (i = _i = 1; 1 <= len ? _i <= len : _i >= len; i = 1 <= len ? ++_i : --_i) {
+    if (i > 0) {
+      for (i = _j = 1; 1 <= len ? _j <= len : _j >= len; i = 1 <= len ? ++_j : --_j) {
+        elt = array[i];
+        j = i;
+        while (j > 0 && array[j - 1].date.getTime() > elt.date.getTime()) {
+          array[j] = array[j - 1];
+          j--;
+        }
+        array[j] = elt;
       }
-      array[j] = elt;
     }
   }
   return callback(array);
