@@ -37,15 +37,17 @@ io.sockets.on 'connection' , (socket) =>
       socket.emit 'organisations', dbdata
     console.log 'user connected'
 
-  socket.on 'allConfs',(data)=>
-    DBCom.readAllConferences 1, (dbdata)=>
-      for i in dbdata
-        console.log i.name
-        # ...
-      
-      socket.emit 'allconferences', dbdata
+  socket.on 'allConfs',(unepage)=>
+    page = parseInt unepage
+    console.log "all page:", page
+    DBCom.readAllConferences page , (dbdata)=>
+      if page is 1 
+        console.log "la page est 1"
+        socket.emit 'allconferences', dbdata
+      else 
+        socket.emit 'allNextPage', dbdata , page
 
-
+ 
   ### CONNECTION DE L'ADMIN###
   socket.on 'admin', (email)=>
     console.log "received connection from admin: ", email
@@ -55,10 +57,15 @@ io.sockets.on 'connection' , (socket) =>
 
 
   ### CHOIX DE L'ORGANISATION PAR LE USER ###
-  socket.on 'organisationChoosed', (id)=>
-    console.log "org choosed"
-    DBCom.readConference id, 1, (dbdata)=>
-      socket.emit 'conferences', dbdata
+  socket.on 'organisationChoosed', (id, unepage)=>
+    console.log "la page:", unepage
+    page = parseInt unepage
+    console.log "page: ", page
+    DBCom.readConference id, page, (dbdata)=>
+      if page is 1
+        socket.emit 'conferences', dbdata
+      else
+        socket.emit 'conferencesNextPage', dbdata , page
 
   socket.on 'nextPageOfOrg', (data)=>
     DBCom.readConference data.id, data.page, (dbdata)=>

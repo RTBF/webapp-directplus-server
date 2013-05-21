@@ -54,14 +54,17 @@ io.sockets.on('connection', function(socket) {
     });
     return console.log('user connected');
   });
-  socket.on('allConfs', function(data) {
-    return DBCom.readAllConferences(1, function(dbdata) {
-      var i, _i, _len;
-      for (_i = 0, _len = dbdata.length; _i < _len; _i++) {
-        i = dbdata[_i];
-        console.log(i.name);
+  socket.on('allConfs', function(unepage) {
+    var page;
+    page = parseInt(unepage);
+    console.log("all page:", page);
+    return DBCom.readAllConferences(page, function(dbdata) {
+      if (page === 1) {
+        console.log("la page est 1");
+        return socket.emit('allconferences', dbdata);
+      } else {
+        return socket.emit('allNextPage', dbdata, page);
       }
-      return socket.emit('allconferences', dbdata);
     });
   });
   /* CONNECTION DE L'ADMIN
@@ -77,10 +80,17 @@ io.sockets.on('connection', function(socket) {
   /* CHOIX DE L'ORGANISATION PAR LE USER
   */
 
-  socket.on('organisationChoosed', function(id) {
-    console.log("org choosed");
-    return DBCom.readConference(id, 1, function(dbdata) {
-      return socket.emit('conferences', dbdata);
+  socket.on('organisationChoosed', function(id, unepage) {
+    var page;
+    console.log("la page:", unepage);
+    page = parseInt(unepage);
+    console.log("page: ", page);
+    return DBCom.readConference(id, page, function(dbdata) {
+      if (page === 1) {
+        return socket.emit('conferences', dbdata);
+      } else {
+        return socket.emit('conferencesNextPage', dbdata, page);
+      }
     });
   });
   socket.on('nextPageOfOrg', function(data) {

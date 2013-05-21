@@ -22,7 +22,6 @@ module.exports.getOrgaListfromAdmin = getOrgaListfromAdmin = (AdminEmail , callb
   .findOne 
     email:AdminEmail
     (err, admin)=>
-      console.log admin
       if err
         console.log err
         return
@@ -50,8 +49,6 @@ module.exports.readConference = readConference = (OrgId, page, callback)->
   finish= page*5
   start = finish - 5
   finish--
-  now = new Date()
-  console.log "readConference"
   Organisation
   .findOne 
     _id:OrgId
@@ -64,29 +61,33 @@ module.exports.readConference = readConference = (OrgId, page, callback)->
     if organisation.conferences.length >0
       len = organisation.conferences.length - 1
       orderArray organisation.conferences, len, (orderedConfs)=>
-        console.log orderedConfs
-        console.log "callback"
-        x=0
-        nonok= true
-        while x<orderedConfs.length and nonok
-          console.log x
-          if orderedConfs[x].date.getTime()<now.getTime()
-            x++
-          else
-            nonok= false
-            # ...C
-        console.log orderedConfs
-
-        start = start + x
-        finish = finish + x
-        console.log start
-        console.log finish 
-        for i in [start..finish]
-          console.log "i", i
-          Confs.push orderedConfs[i] if orderedConfs[i]
-        callback Confs
+        getConfsToSend page, start, finish, orderedConfs, (confToSend)=>
+          callback confToSend
     else
       callback Confs
+
+getConfsToSend= (page, start, finish, orderedConfs, callback)->
+  Confs=[]
+  now = new Date()
+  x=0
+  nonok= true
+  while x<orderedConfs.length and nonok
+    if orderedConfs[x].date.getTime()<now.getTime()
+      x++
+    else
+      nonok= false
+      # ...C
+  start = start + x
+  finish = finish + x
+  if page is 1
+    Confs.push orderedConfs[start-3] if start-3 >= 0
+    Confs.push orderedConfs[start-2] if start-2 >= 0
+    Confs.push orderedConfs[start-1] if start-1 >= 0
+  for i in [start..finish]
+    Confs.push orderedConfs[i] if orderedConfs[i]
+  callback Confs
+
+
 
 module.exports.readConferenceForAdmin = readConferenceForAdmin = (OrgId, page, callback)->
   Confs = []
@@ -106,7 +107,6 @@ module.exports.readConferenceForAdmin = readConferenceForAdmin = (OrgId, page, c
       len = organisation.conferences.length - 1
       orderArray organisation.conferences, len, (orderedConfs)=>
         for i in [start..finish]
-          console.log "i", i
           Confs.push orderedConfs[i] if orderedConfs[i]
         callback Confs
     else
@@ -119,39 +119,16 @@ module.exports.readAllConferences= readAllConferences = (page, callback)->
   finish= page*5
   start = finish - 5
   finish--
-  now = new Date()
-  console.log "whatup?"
   Conference.find (err, confs)=>
 
     if err
       console.log "erreur: ", err
     
-      
-      # ...
-    
     if confs.length >0
       len  = confs.length - 1
       orderArray confs, len, (orderedConfs)=>
-        for i in orderedConfs
-          console.log i.name
-          console.log i.date
-        x=0
-        nonok= true
-        while x<orderedConfs.length and nonok
-          
-          if orderedConfs[x].date.getTime()<now.getTime()
-            x++
-          else
-            nonok= false
-            # ...C
-        
-
-        start = start + x
-        finish = finish + x
-        for i in [start..finish]
-          
-          Confs.push orderedConfs[i] if orderedConfs[i]
-        callback Confs
+        getConfsToSend page, start, finish, orderedConfs, (confToSend)=>
+          callback confToSend
     else
       callback Confs
 
