@@ -155,6 +155,7 @@ io.sockets.on 'connection' , (socket) =>
       socket.emit 'orgdeleted', dbdata
 
   socket.on 'updateorg', (data)=>
+    console.log 'updateorg',data
     DBCreate.UpdateOrganisation data, (dbdata)=>
       console.log 'org update: ', dbdata
       socket.emit 'orgupdated', dbdata
