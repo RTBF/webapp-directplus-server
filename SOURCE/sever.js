@@ -93,6 +93,11 @@ io.sockets.on('connection', function(socket) {
       }
     });
   });
+  socket.on('organisationChoosedForAdmin', function(id) {
+    return DBCom.readConferenceForAdmin(id, function(dbdata) {
+      return socket.emit('conferences', dbdata);
+    });
+  });
   socket.on('nextPageOfOrg', function(data) {
     return DBCom.readConference(data.id, data.page, function(dbdata) {
       return socket.emit('nextConferences', dbdata);

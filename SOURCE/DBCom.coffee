@@ -59,6 +59,7 @@ module.exports.readConference = readConference = (OrgId, page, callback)->
   .exec (err, organisation)=>
     console.log organisation
     if organisation.conferences.length >0
+      console.log organisation.conferences
       len = organisation.conferences.length - 1
       orderArray organisation.conferences, len, (orderedConfs)=>
         getConfsToSend page, start, finish, orderedConfs, (confToSend)=>
@@ -89,12 +90,8 @@ getConfsToSend= (page, start, finish, orderedConfs, callback)->
 
 
 
-module.exports.readConferenceForAdmin = readConferenceForAdmin = (OrgId, page, callback)->
+module.exports.readConferenceForAdmin = readConferenceForAdmin = (OrgId, callback)->
   Confs = []
-  finish= page*5
-  start = finish - 5
-  finish--
-
   Organisation
   .findOne 
     _id:OrgId
@@ -103,14 +100,15 @@ module.exports.readConferenceForAdmin = readConferenceForAdmin = (OrgId, page, c
         console.log "error while trying to find the organisations of this admin"
   .populate('conferences')
   .exec (err, organisation)=>
-    if organisation.conferences.length >0
-      len = organisation.conferences.length - 1
-      orderArray organisation.conferences, len, (orderedConfs)=>
-        for i in [start..finish]
-          Confs.push orderedConfs[i] if orderedConfs[i]
+    if organisation.conferences
+      if organisation.conferences.length >0
+        for conf in organisation.conferences
+          Confs.push conf
+        callback Confs
+      else
         callback Confs
     else
-      callback Confs
+      callback Confs 
 
 
 
@@ -133,16 +131,19 @@ module.exports.readAllConferences= readAllConferences = (page, callback)->
       callback Confs
 
 orderArray = (array, len, callback)->
-  for i in [1..len] 
-    if i>0
-      for i in [1..len]
-        elt= array[i]
-        j= i
-        while j>0 and array[j-1].date.getTime() > elt.date.getTime()
-          array[j]=array[j-1]
-          j--
-        array[j]=elt
-  callback array
+  if len is 0
+    callback array
+  else
+    for i in [1..len] 
+      if i>0
+        for i in [1..len]
+          elt= array[i]
+          j= i
+          while j>0 and array[j-1].date.getTime() > elt.date.getTime()
+            array[j]=array[j-1]
+            j--
+          array[j]=elt
+    callback array
     
 module.exports.readSlideList = readSlideList = (ConfId, callback)->
   slides = []

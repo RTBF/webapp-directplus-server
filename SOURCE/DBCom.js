@@ -71,6 +71,7 @@ module.exports.readConference = readConference = function(OrgId, page, callback)
     var len;
     console.log(organisation);
     if (organisation.conferences.length > 0) {
+      console.log(organisation.conferences);
       len = organisation.conferences.length - 1;
       return orderArray(organisation.conferences, len, function(orderedConfs) {
         return getConfsToSend(page, start, finish, orderedConfs, function(confToSend) {
@@ -117,13 +118,10 @@ getConfsToSend = function(page, start, finish, orderedConfs, callback) {
   return callback(Confs);
 };
 
-module.exports.readConferenceForAdmin = readConferenceForAdmin = function(OrgId, page, callback) {
-  var Confs, finish, start,
+module.exports.readConferenceForAdmin = readConferenceForAdmin = function(OrgId, callback) {
+  var Confs,
     _this = this;
   Confs = [];
-  finish = page * 5;
-  start = finish - 5;
-  finish--;
   return Organisation.findOne({
     _id: OrgId
   }, function(err, organisation) {
@@ -131,18 +129,18 @@ module.exports.readConferenceForAdmin = readConferenceForAdmin = function(OrgId,
       return console.log("error while trying to find the organisations of this admin");
     }
   }).populate('conferences').exec(function(err, organisation) {
-    var len;
-    if (organisation.conferences.length > 0) {
-      len = organisation.conferences.length - 1;
-      return orderArray(organisation.conferences, len, function(orderedConfs) {
-        var i, _i;
-        for (i = _i = start; start <= finish ? _i <= finish : _i >= finish; i = start <= finish ? ++_i : --_i) {
-          if (orderedConfs[i]) {
-            Confs.push(orderedConfs[i]);
-          }
+    var conf, _i, _len, _ref;
+    if (organisation.conferences) {
+      if (organisation.conferences.length > 0) {
+        _ref = organisation.conferences;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          conf = _ref[_i];
+          Confs.push(conf);
         }
         return callback(Confs);
-      });
+      } else {
+        return callback(Confs);
+      }
     } else {
       return callback(Confs);
     }
@@ -176,20 +174,24 @@ module.exports.readAllConferences = readAllConferences = function(page, callback
 
 orderArray = function(array, len, callback) {
   var elt, i, j, _i, _j;
-  for (i = _i = 1; 1 <= len ? _i <= len : _i >= len; i = 1 <= len ? ++_i : --_i) {
-    if (i > 0) {
-      for (i = _j = 1; 1 <= len ? _j <= len : _j >= len; i = 1 <= len ? ++_j : --_j) {
-        elt = array[i];
-        j = i;
-        while (j > 0 && array[j - 1].date.getTime() > elt.date.getTime()) {
-          array[j] = array[j - 1];
-          j--;
+  if (len === 0) {
+    return callback(array);
+  } else {
+    for (i = _i = 1; 1 <= len ? _i <= len : _i >= len; i = 1 <= len ? ++_i : --_i) {
+      if (i > 0) {
+        for (i = _j = 1; 1 <= len ? _j <= len : _j >= len; i = 1 <= len ? ++_j : --_j) {
+          elt = array[i];
+          j = i;
+          while (j > 0 && array[j - 1].date.getTime() > elt.date.getTime()) {
+            array[j] = array[j - 1];
+            j--;
+          }
+          array[j] = elt;
         }
-        array[j] = elt;
       }
     }
+    return callback(array);
   }
-  return callback(array);
 };
 
 module.exports.readSlideList = readSlideList = function(ConfId, callback) {

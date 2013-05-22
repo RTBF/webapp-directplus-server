@@ -67,6 +67,10 @@ io.sockets.on 'connection' , (socket) =>
       else
         socket.emit 'conferencesNextPage', dbdata , page
 
+  socket.on 'organisationChoosedForAdmin', (id)=>
+    DBCom.readConferenceForAdmin id, (dbdata)=>
+      socket.emit 'conferences', dbdata
+
   socket.on 'nextPageOfOrg', (data)=>
     DBCom.readConference data.id, data.page, (dbdata)=>
       socket.emit 'nextConferences', dbdata
