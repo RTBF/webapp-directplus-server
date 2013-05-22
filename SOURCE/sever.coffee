@@ -78,17 +78,9 @@ io.sockets.on 'connection' , (socket) =>
 
   ### CHOIX DE LA CONFERENCE PAR LE USER ###
   socket.on 'conferenceChoosed', (id)=>
-    hash = {}
-    rooms = socket.manager.rooms
-    roomClients = socket.manager.roomClients
-    console.log "roomsc", roomClients
-    console.log "rooms", rooms
-    for channel in rooms
-      console.log "channelllllllll,", channel
-      if roomClients[socket.id][channel] is true
-        hash[channel] = channel 
-        console.log "hash:",hash
-    socket.join id
+    socket.leave socket.roomin if socket.roomin
+    socket.roomin = id
+    socket.join socket.roomin
     DBCom.readSlideList id, (dbdata)=>
       socket.emit 'slides', dbdata
 

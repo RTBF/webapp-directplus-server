@@ -107,21 +107,11 @@ io.sockets.on('connection', function(socket) {
   */
 
   socket.on('conferenceChoosed', function(id) {
-    var channel, hash, roomClients, rooms, _i, _len;
-    hash = {};
-    rooms = socket.manager.rooms;
-    roomClients = socket.manager.roomClients;
-    console.log("roomsc", roomClients);
-    console.log("rooms", rooms);
-    for (_i = 0, _len = rooms.length; _i < _len; _i++) {
-      channel = rooms[_i];
-      console.log("channelllllllll,", channel);
-      if (roomClients[socket.id][channel] === true) {
-        hash[channel] = channel;
-        console.log("hash:", hash);
-      }
+    if (socket.roomin) {
+      socket.leave(socket.roomin);
     }
-    socket.join(id);
+    socket.roomin = id;
+    socket.join(socket.roomin);
     return DBCom.readSlideList(id, function(dbdata) {
       return socket.emit('slides', dbdata);
     });
