@@ -9,7 +9,7 @@ OrganisationSchema = Schema
     name: 
       type: String
       required: true
-    tumb:
+    thumb:
       type: String
     description:
       type:String

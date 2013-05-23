@@ -68,7 +68,7 @@ module.exports.CreateConference = CreateConference = (newconf, callback)=>
           _orga: newconf._orga
           name : newconf.name
           date : mydate
-          tumb : newconf.tumb
+          thumb : newconf.thumb
           description : newconf.description
       
         conference.save (err, conference) ->
@@ -94,7 +94,7 @@ module.exports.CreateOrganisation = CreateOrganisation = (newOrg, callback)=>
       organisation= new Organisation
         _admin: admin._id
         name : newOrg.title
-        tumb : newOrg.tumb
+        thumb : newOrg.thumb
         description : newOrg.description
 
       organisation.save (err, organisation) ->
@@ -141,7 +141,7 @@ module.exports.UpdateConference = UpdateConference= (nconference, callback)=>
   Conference.findByIdAndUpdate nconference._id,
     name: nconference.name
     date: nconference.date
-    tumb: nconference.tumb
+    thumb: nconference.thumb
     description: nconference.description
   ,
     new: true
@@ -153,7 +153,7 @@ module.exports.UpdateConference = UpdateConference= (nconference, callback)=>
 module.exports.UpdateOrganisation = UpdateOrganisation= (norganisation, callback)=>
   Organisation.findByIdAndUpdate norganisation._id , 
     name: norganisation.title
-    tumb: norganisation.tumb
+    thumb: norganisation.thumb
     description:norganisation.description
   ,
     new: true 

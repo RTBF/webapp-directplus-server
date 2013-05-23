@@ -10,7 +10,7 @@ ConferenceSchema = Schema
     type: String
     required: true
   date: Date
-  tumb: 
+  thumb: 
     type: String
   description:
     type: String
