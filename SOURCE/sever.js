@@ -124,7 +124,7 @@ io.sockets.on('connection', function(socket) {
     return DBCom.readSlideToSend(data, function(dbdata) {
       DBCom.setSent(true, data);
       socket.emit('sent', data);
-      return brodcastSlide('snext', dbdata);
+      return socket.broadcast.to(dbdata._conf).emit('snext', dbdata);
     });
   });
   /* RETRAIT D'UN SLIDE PAR L'ADMIN
@@ -153,7 +153,7 @@ io.sockets.on('connection', function(socket) {
     return DBCreate.UpdateSlide(data, function(dbdata) {
       socket.emit('slideUpdated', dbdata);
       if (dbdata.Sent === true) {
-        return brodcastSlide('slideUpdated', dbdata);
+        return socket.broadcast.to(dbdata._conf).emit('slideUpdated', dbdata);
       }
     });
   });

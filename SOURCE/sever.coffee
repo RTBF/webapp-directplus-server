@@ -92,7 +92,7 @@ io.sockets.on 'connection' , (socket) =>
     DBCom.readSlideToSend data, (dbdata)=>
       DBCom.setSent true , data
       socket.emit 'sent', data
-      brodcastSlide 'snext', dbdata
+      socket.broadcast.to(dbdata._conf).emit 'snext', dbdata
 
 
   ### RETRAIT D'UN SLIDE PAR L'ADMIN ###
@@ -116,7 +116,7 @@ io.sockets.on 'connection' , (socket) =>
     DBCreate.UpdateSlide data, (dbdata)=>
       socket.emit 'slideUpdated', dbdata
       if dbdata.Sent is true
-        brodcastSlide 'slideUpdated', dbdata 
+        socket.broadcast.to(dbdata._conf).emit 'slideUpdated', dbdata
         # ...
       
 
